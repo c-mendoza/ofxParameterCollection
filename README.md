@@ -1,5 +1,5 @@
 # ofxParameterCollection
-ofxParameterCollection is an [OpenFrameworks](http://openframeworks.cc) addon that manages an indefinite number of ofParameters of the same type while providing simple serialization, deserialization and notification. The class is useful in situations where you would like to work with ofParameters but you don't know ahead of time how many parametrized items you will have. In essence, the class is like an std::vector for ofParameters, and its use cases are similar to that of std::vector.
+ofxParameterCollection is an [openFrameworks](http://openframeworks.cc) addon that manages an indefinite number of ofParameters of the same type while providing simple serialization, deserialization and notification. The class is useful in situations where you would like to work with ofParameters but you don't know ahead of time how many parametrized items you will have. In essence, the class is like an std::vector for ofParameters, and its use cases are similar to that of std::vector.
 
 ## Installation
 It installs like any other OF addon, but since it is a header-only library consisting of a single file you can just copy it into your project.

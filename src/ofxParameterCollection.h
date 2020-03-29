@@ -27,6 +27,7 @@ protected:
 	std::string itemPrefix;
 	ofParameterGroup parameterGroup;
 	bool isSetup = false;
+	bool hasLimits = false;
 	std::vector<std::shared_ptr<ofParameter<ParameterType>>> parameters;
 	ofEventListeners valueListeners;
 	ParameterType min;
@@ -97,6 +98,7 @@ public:
 	void setLimits(ParameterType min, ParameterType max) {
 		this->min = min;
 		this->max = max;
+		hasLimits = true;
 	}
 	/**
 	 * @brief Creates an ofParameter with the supplied value and adds it to the collection.
@@ -109,8 +111,8 @@ public:
 		ofParameter<ParameterType> param;
 		param.set(itemPrefix + ofToString(parameterGroup.size()),
 				  value);
-		ParameterType dummy;
-		if (min != dummy || max != dummy) {
+
+		if (hasLimits) {
 			param.setMin(min);
 			param.setMax(max);
 		}

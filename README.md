@@ -65,4 +65,4 @@ The class provides two events that you can listen to:
 Make sure to check out the example included in the repo.
 
 ## Version
-0.1
+0.2

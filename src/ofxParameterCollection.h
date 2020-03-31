@@ -87,19 +87,23 @@ public:
 	 * @param min The minimum value for the ofParameter
 	 *
 	 */
-	void setup(std::string itemPrefix, std::string groupName, ofParameterGroup& parentGroup, ParameterType min, ParameterType max)
+	void setup(std::string itemPrefix, std::string groupName, ofParameterGroup& parentGroup, ParameterType min,
+			   ParameterType max)
 	{
 		setup(itemPrefix, groupName, parentGroup);
 		setLimits(min, max);
 	}
+
 	/**
 	 * @brief Sets the minimum and maximum for the ofParameters' values.
 	 */
-	void setLimits(ParameterType min, ParameterType max) {
+	void setLimits(ParameterType min, ParameterType max)
+	{
 		this->min = min;
 		this->max = max;
 		hasLimits = true;
 	}
+
 	/**
 	 * @brief Creates an ofParameter with the supplied value and adds it to the collection.
 	 * @param value The value that the ofParameter will be assigned.
@@ -112,11 +116,12 @@ public:
 		param.set(itemPrefix + ofToString(parameterGroup.size()),
 				  value);
 
-		if (hasLimits) {
+		if (hasLimits)
+		{
 			param.setMin(min);
 			param.setMax(max);
 		}
-		
+
 		auto paramPtr = std::make_shared<ofParameter<ParameterType>>(param);
 
 		valueListeners.push(paramPtr->newListener([&, paramPtr](ParameterType& value)
@@ -137,27 +142,49 @@ public:
 /**
  * @brief Gets a reference to the ofParameter at the given index.
  */
-	ofParameter<ParameterType>& getAt(int index)
+	std::shared_ptr<ofParameter<ParameterType>> getAt(int index)
 	{
-		parameters.at(index);
+		return parameters.at(index);
 	}
 
-	// TODO
-//	void removeAt(int i, bool notify = true)
-//	{
-//
-//	}
+	
+	bool removeAt(int i, bool notify = true)
+	{
+		if (i >= parameters.size())
+		{
+			ofLogNotice("ofxParameterCollection") << "removeAt: Index out of bounds. Index: " << i;
+			return false;
+		}
 
-	void removeItem(ofParameter<ParameterType> param, bool notify = true)
+		return removeItem(getAt(i), notify);
+	}
+
+	bool removeItem(std::shared_ptr<ofParameter<ParameterType>> param, bool notify = true)
 	{
 		auto iter = std::find(parameters.begin(), parameters.end(), param);
 		if (iter != parameters.end())
 		{
-			parameterGroup.remove(param);
 			parameters.erase(iter);
+			// Sadly we can't delete single params from the group and rename them, otherwise
+			// ofParameterGroup loses track of it. So we use setCollection to clear the group
+			// and re-add all our items. On the upside, we leave no dangling event listeners.
+			setCollection(parameters, false);
 			if (notify) collectionChangedEvent.notify(*this);
 			assert(parameterGroup.size() == parameters.size());
+			return true;
 		}
+
+		return false;
+	}
+	
+	void setCollection(std::vector<std::shared_ptr<ofParameter<ParameterType>>> newCollection, bool notify = true)
+	{
+		this->clear(false);
+		for (auto& paramPtr : newCollection)
+		{
+			addItem(*paramPtr.get(), false);
+		}
+		if (notify) this->notify();
 	}
 
 	/**
@@ -168,14 +195,14 @@ public:
 	 * The listeners to the collectionChangedEvent and collectionItemChangedEvent are not affected.
 	 * @param newCollection
 	 */
-	void setCollection(std::vector<std::shared_ptr<ParameterType>> newCollection)
+	void setCollection(std::vector<std::shared_ptr<ParameterType>> newCollection, bool notify = true)
 	{
 		this->clear(false);
 		for (auto& paramPtr : newCollection)
 		{
 			addItem(*paramPtr, false);
 		}
-		notify();
+		if (notify) this->notify();
 	}
 
 	/**
@@ -185,14 +212,14 @@ public:
 	 * The listeners to the collectionChangedEvent are not affected.
 	 * @param newCollection
 	 */
-	void setCollection(std::vector<ParameterType> newCollection)
+	void setCollection(std::vector<ParameterType> newCollection, bool notify = true)
 	{
 		this->clear(false);
 		for (auto& value : newCollection)
 		{
 			addItem(value, false);
 		}
-		notify();
+		if (notify) this->notify();
 	}
 
 	/**
@@ -200,14 +227,14 @@ public:
 	 * equal to the number of ofParameters currently in the collection.
 	 * @param newValues
 	 */
-	void setValues(std::vector<std::shared_ptr<ParameterType>> newValues)
+	void setValues(std::vector<std::shared_ptr<ParameterType>> newValues, bool notify = true)
 	{
 		assert(newValues.size() == parameters.size());
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			parameters[i].get() = *(newValues[i]);
 		}
-		notify();
+		if (notify) this->notify();
 	}
 
 	/**
@@ -215,14 +242,14 @@ public:
 	 * equal to the number of ofParameters currently in the collection.
 	 * @param newValues
 	 */
-	void setValues(std::vector<ParameterType> newValues)
+	void setValues(std::vector<ParameterType> newValues, bool notify = true)
 	{
 		assert(newValues.size() == parameters.size());
 		for (int i = 0; i < parameters.size(); i++)
 		{
 			parameters[i].get() = newValues[i];
 		}
-		notify();
+		if (notify) this->notify();
 	}
 
 	/**
@@ -258,7 +285,8 @@ public:
 	/**
 	 * @brief Returns a reference to the last ofParameter in the collection.
 	 */
-	ofParameter<ParameterType>& back() {
+	std::shared_ptr<ofParameter<ParameterType>>& back()
+	{
 		return parameters.back();
 	}
 

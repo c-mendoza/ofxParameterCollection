@@ -11,19 +11,50 @@ void ofApp::setup(){
 	
 	auto min = glm::vec2(0, 0);
 	auto max = glm::vec2(ofGetWidth(), ofGetHeight());
+	
+	// Set up our collection. Notice the trailing space in "Position ". Purely cosmetic, but
+	// the names will look nicer in the gui.
 	positionsCollection.setup("Position ", "Circle Positions", mainGroup, min, max);
-	// Listen for button presses:
+	
+	// Register an event listener that will inform us when the number of items
+	// in the collection changes:
+	el.push(positionsCollection.collectionChangedEvent.
+			newListener([this](ofxParameterCollection<glm::vec2>& collection) {  // <- note the lambda argument
+		// Rebuild the gui when the collection changes:
+		buildGui();
+	}));
+	
+	// Listen for button presses
+	// This button adds a circle:
 	addCircleButtton.addListener(this, &ofApp::addCircleButtonPressed);
 	addCircleButtton.setup("Add Circle");
+	
+	// This one removes the last circle:
+	removeLastCircleButton.addListener(this, &ofApp::removeLastCircleButtonPressed);
+	removeLastCircleButton.setup("Remove Last");
+	
+	// And this one removes a randomly selected circle:
+	removeRandomButton.addListener(this, &ofApp::removeRandomButtonPressed);
+	removeRandomButton.setup("Remove Random");
 	settingsFilename = "settings.xml";
-	setupGui();
+	
+	gui.setup();
+	buildGui();
+	
+
 }
 
-// We are setting up the gui in a separate method to rebuild it when we deserialize or when we add a circle
-void ofApp::setupGui() {
-	gui.setup();
+// We are setting up the gui in a separate method to rebuild it when we deserialize or
+// when we add a circle.
+// NOTE: There seems to be a bad memory leak in ofxGui that happens when we repeatedly clear and add gui elements
+// the gui this way. ofxParameterCollection should not be leaking however.
+
+void ofApp::buildGui() {
+	gui.clear();
 	gui.add(&addCircleButtton);
-	gui.add(mainGroup);	
+	gui.add(&removeLastCircleButton);
+	gui.add(&removeRandomButton);
+	gui.add(mainGroup);
 }
 
 //--------------------------------------------------------------
@@ -55,15 +86,30 @@ void ofApp::draw(){
 void ofApp::exit() {
 	// Cleanup:
 	addCircleButtton.removeListener(this, &ofApp::addCircleButtonPressed);
+	removeLastCircleButton.removeListener(this, &ofApp::removeLastCircleButtonPressed);
+	removeRandomButton.removeListener(this, &ofApp::removeRandomButtonPressed);
 }
 
 void ofApp::addCircleButtonPressed() {
-	
 	// Add an item to the collection in a random location:
 	positionsCollection.addItem(glm::vec2(ofRandom(0, ofGetWidth()), ofRandom(0, ofGetHeight())));
+}
+
+void ofApp::removeLastCircleButtonPressed() {
+	if (positionsCollection.size() == 0) return; // Don't do anything if we don't have items in the collection
 	
-	// Since our data has changed, we need to rebuild the gui:
-	setupGui();
+	// Remove the last item in the collection:
+	positionsCollection.removeItem(positionsCollection.back());
+	
+	// We could have also used:
+	// positionsCollection.removeAt(positionsCollections.size()-1);
+}
+
+void ofApp::removeRandomButtonPressed() {
+	if (positionsCollection.size() == 0) return; // Don't do anything if we don't have items in the collection
+	
+	int index = std::floor(ofRandom(positionsCollection.size()));
+	positionsCollection.removeAt(index);
 }
 
 // Standard serialization (it is in fact copied from ofxGui!)
@@ -87,7 +133,7 @@ void ofApp::deserialize() {
 	ofDeserialize(xml, mainGroup);
 	
 	// Our data changed so we rebuild our gui:
-	setupGui();
+	buildGui();
 }
 
 
@@ -133,7 +179,7 @@ void ofApp::mouseEntered(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::mouseExited(int x, int y){
-
+	
 }
 
 //--------------------------------------------------------------

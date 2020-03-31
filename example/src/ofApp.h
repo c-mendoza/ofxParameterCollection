@@ -25,7 +25,9 @@ public:
 	void gotMessage(ofMessage msg);
 	
 	void addCircleButtonPressed();
-	void setupGui();
+	void removeLastCircleButtonPressed();
+	void removeRandomButtonPressed();
+	void buildGui();
 	void deserialize();
 	void serialize();
 	
@@ -35,7 +37,10 @@ public:
 	ofParameter<ofColor> color;
 	ofxParameterCollection<glm::vec2> positionsCollection;
 	ofxButton addCircleButtton;
+	ofxButton removeLastCircleButton;
+	ofxButton removeRandomButton;
 	std::string settingsFilename;
+	ofEventListeners el;
 	
 	
 };

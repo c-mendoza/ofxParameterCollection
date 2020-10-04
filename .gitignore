@@ -31,3 +31,7 @@ build/
 !data/
 
 CMakeLists.txt
+
+.idea/
+
+cmake-build-debug/

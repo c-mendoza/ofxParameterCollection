@@ -5,6 +5,9 @@
 #ifndef OFX_PARAMETER_COLLECTION_H
 #define OFX_PARAMETER_COLLECTION_H
 
+#define OFX_PARAMETER_COLLECTION_MAJOR 0
+#define OFX_PARAMETER_COLLECTION_MINOR 2
+
 #include <ofParameter.h>
 
 /**
@@ -21,7 +24,7 @@
  * collectionChangedEvent, while item value changes are notified via the collectionItemChangedEvent.
  */
 template<typename ParameterType>
-class ofxParameterCollection
+class ofxParameterCollection : public ofAbstractParameter
 {
 protected:
 	std::string itemPrefix;

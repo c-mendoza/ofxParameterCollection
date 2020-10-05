@@ -36,7 +36,6 @@ protected:
 	ParameterType min;
 	ParameterType max;
 public:
-
 	/**
 	 * @brief Subscribe to this event to be notified when items are added or removed from the collection.
 	 * The event handler signature should be (ofxParameterCollection<yourCollectionType>& pCollection)
@@ -393,6 +392,24 @@ public:
 		collectionChangedEvent.notify(*this);
 	}
 
+	~ofxParameterCollection() override;
+	string getName() const override;
+	void setName(const string& name) override;
+	string toString() const override;
+	void fromString(const string& str) override;
+	string type() const override;
+	string getEscapedName() const override;
+	string valueType() const override;
+	void setParent(ofParameterGroup& _parent) override;
+	bool isSerializable() const override;
+	bool isReadOnly() const override;
+	shared_ptr<ofAbstractParameter> newReference() const override;
+	bool isReferenceTo(const ofAbstractParameter& other) const override;
+protected:
+	const ofParameterGroup getFirstParent() const override;
+	void setSerializable(bool serializable) override;
+	string escape(const string& str) const override;
+	const void* getInternalObject() const override;
 protected:
 	/**
  	* @brief Creates an ofParameter with a null value and adds it the collection. This is mostly useful to get
@@ -419,6 +436,108 @@ protected:
 		}
 	}
 };
+
+template<typename ParameterType>
+ofxParameterCollection<ParameterType>::~ofxParameterCollection()
+{
+
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::getName() const
+{
+	return std::string();
+}
+
+template<typename ParameterType>
+void ofxParameterCollection<ParameterType>::setName(const string& name)
+{
+
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::toString() const
+{
+	return std::string();
+}
+
+template<typename ParameterType>
+void ofxParameterCollection<ParameterType>::fromString(const string& str)
+{
+
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::type() const
+{
+	return ofAbstractParameter::type();
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::getEscapedName() const
+{
+	return ofAbstractParameter::getEscapedName();
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::valueType() const
+{
+	return std::string();
+}
+
+template<typename ParameterType>
+void ofxParameterCollection<ParameterType>::setParent(ofParameterGroup& _parent)
+{
+
+}
+
+template<typename ParameterType>
+bool ofxParameterCollection<ParameterType>::isSerializable() const
+{
+	return false;
+}
+
+template<typename ParameterType>
+bool ofxParameterCollection<ParameterType>::isReadOnly() const
+{
+	return false;
+}
+
+template<typename ParameterType>
+shared_ptr<ofAbstractParameter> ofxParameterCollection<ParameterType>::newReference() const
+{
+	return std::shared_ptr<ofAbstractParameter>();
+}
+
+template<typename ParameterType>
+bool ofxParameterCollection<ParameterType>::isReferenceTo(const ofAbstractParameter& other) const
+{
+	return ofAbstractParameter::isReferenceTo(other);
+}
+
+template<typename ParameterType>
+const ofParameterGroup ofxParameterCollection<ParameterType>::getFirstParent() const
+{
+	return ofParameterGroup();
+}
+
+template<typename ParameterType>
+void ofxParameterCollection<ParameterType>::setSerializable(bool serializable)
+{
+
+}
+
+template<typename ParameterType>
+string ofxParameterCollection<ParameterType>::escape(const string& str) const
+{
+	return ofAbstractParameter::escape(str);
+}
+
+template<typename ParameterType>
+const void* ofxParameterCollection<ParameterType>::getInternalObject() const
+{
+	return nullptr;
+}
 
 
 #endif //OFX_PARAMETER_COLLECTION_H

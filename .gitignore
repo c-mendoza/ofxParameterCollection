@@ -35,3 +35,5 @@ CMakeLists.txt
 .idea/
 
 cmake-build-debug/
+
+example/bin

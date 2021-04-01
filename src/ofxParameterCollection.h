@@ -162,6 +162,12 @@ public:
 	bool removeItem(std::shared_ptr<ofParameter<ParameterType>> param, bool notify = true)
 	{
 		auto iter = std::find(parameters.begin(), parameters.end(), param);
+		return removeItem(iter, notify);
+	}
+
+	bool
+	removeItem(typename std::vector<std::shared_ptr<ofParameter<ParameterType>>>::iterator iter, bool notify = true)
+	{
 		if (iter != parameters.end())
 		{
 			parameters.erase(iter);

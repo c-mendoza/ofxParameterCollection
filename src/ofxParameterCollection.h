@@ -361,16 +361,16 @@ public:
 
 		if (!search)
 		{
-			ofLogNotice(__PRETTY_FUNCTION__) << "Could not find " << path;
+			ofLogNotice(__FUNCTION__) << "Could not find " << path;
 			return;
 		}
 		auto children = search.getChildren();
 		for (auto child : children)
 		{
-			ofLogVerbose(__PRETTY_FUNCTION__) << child.getName();
+			ofLogVerbose(__FUNCTION__) << child.getName();
 			if (child.getValue().size() == 0)
 			{
-				ofLogError(__PRETTY_FUNCTION__) << "Ignoring empty child in group " << parameterGroup.getName();
+				ofLogError(__FUNCTION__) << "Ignoring empty child in group " << parameterGroup.getName();
 				continue;
 			}
 			addEntry(false);

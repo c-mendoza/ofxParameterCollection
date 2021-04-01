@@ -179,10 +179,9 @@ public:
 			assert(parameterGroup.size() == parameters.size());
 			return true;
 		}
-
 		return false;
 	}
-	
+
 	void setCollection(std::vector<std::shared_ptr<ofParameter<ParameterType>>> newCollection, bool notify = true)
 	{
 		this->clear(false);
@@ -262,7 +261,7 @@ public:
 	 * @brief Begin iterator for the ofParameters in the collection.
 	 * @return
 	 */
-	typename std::vector<std::shared_ptr<ofParameter<ParameterType>>>::const_iterator begin()
+	typename std::vector<std::shared_ptr<ofParameter<ParameterType>>>::iterator begin()
 	{
 		assert(parameters.size() == parameterGroup.size());
 		return parameters.begin();
@@ -272,7 +271,7 @@ public:
 	 * @brief End iterator for the ofParameters in the collection.
 	 * @return
 	 */
-	typename std::vector<std::shared_ptr<ofParameter<ParameterType>>>::const_iterator end()
+	typename std::vector<std::shared_ptr<ofParameter<ParameterType>>>::iterator end()
 	{
 		assert(parameters.size() == parameterGroup.size());
 		return parameters.end();
@@ -382,7 +381,7 @@ public:
 	 * the internal state of the collection. If you want to iterate over the collection, consider using the
 	 * begin() and end() iterators of the class, or use a range based for loop.
 	 */
-	std::vector<std::shared_ptr<ofParameter<ParameterType>>> getParameters() const
+	std::vector<std::shared_ptr<ofParameter<ParameterType>>> getParameters()
 	{
 		return parameters;
 	}
